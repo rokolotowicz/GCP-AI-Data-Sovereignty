@@ -1,0 +1,10 @@
+CONFIDENTIAL CUSTOMER RECORD
+================================
+Name: Helena Vargas
+Home Address: 318 Birchwood Avenue, Denver, CO 80205
+SSN: 356-72-9043
+Phone: (720) 555-0164
+Email: helena.vargas@example.com
+
+Notes: Standard account in good standing. Customer requested a follow-up
+call next quarter regarding portfolio options. No outstanding issues.

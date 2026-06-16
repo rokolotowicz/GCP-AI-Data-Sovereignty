@@ -1,0 +1,10 @@
+CONFIDENTIAL CUSTOMER RECORD
+================================
+Name: Rafael Costa
+Home Address: 210 Juniper Court, Austin, TX 78704
+SSN: 318-49-6602
+Phone: (512) 555-0125
+Email: rafael.costa@example.com
+
+Notes: Standard account in good standing. Customer requested a follow-up
+call next quarter regarding portfolio options. No outstanding issues.

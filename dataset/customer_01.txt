@@ -1,0 +1,10 @@
+CONFIDENTIAL CUSTOMER RECORD
+================================
+Name: Marcus Bellamy
+Home Address: 4821 Larkspur Lane, Columbus, OH 43215
+SSN: 412-55-8190
+Phone: (614) 555-0142
+Email: marcus.bellamy@example.com
+
+Notes: Standard account in good standing. Customer requested a follow-up
+call next quarter regarding portfolio options. No outstanding issues.

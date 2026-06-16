@@ -1,0 +1,10 @@
+CONFIDENTIAL CUSTOMER RECORD
+================================
+Name: Priya Raghunathan
+Home Address: 77 Westover Terrace, Portland, OR 97214
+SSN: 287-44-6135
+Phone: (503) 555-0188
+Email: priya.r@example.com
+
+Notes: Standard account in good standing. Customer requested a follow-up
+call next quarter regarding portfolio options. No outstanding issues.

@@ -1,0 +1,10 @@
+CONFIDENTIAL CUSTOMER RECORD
+================================
+Name: Greta Halvorsen
+Home Address: 53 Meadowbrook Lane, Minneapolis, MN 55408
+SSN: 401-77-2298
+Phone: (612) 555-0190
+Email: greta.h@example.com
+
+Notes: Standard account in good standing. Customer requested a follow-up
+call next quarter regarding portfolio options. No outstanding issues.

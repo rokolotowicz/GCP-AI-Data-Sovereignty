@@ -1,0 +1,10 @@
+CONFIDENTIAL CUSTOMER RECORD
+================================
+Name: Idris Bello
+Home Address: 8810 Cedar Ridge Way, Raleigh, NC 27604
+SSN: 234-58-1907
+Phone: (919) 555-0108
+Email: idris.bello@example.com
+
+Notes: Standard account in good standing. Customer requested a follow-up
+call next quarter regarding portfolio options. No outstanding issues.

@@ -1,0 +1,10 @@
+CONFIDENTIAL CUSTOMER RECORD
+================================
+Name: Tobias Lindgren
+Home Address: 95 Harbor View Road, Seattle, WA 98109
+SSN: 223-88-1276
+Phone: (206) 555-0133
+Email: t.lindgren@example.com
+
+Notes: Standard account in good standing. Customer requested a follow-up
+call next quarter regarding portfolio options. No outstanding issues.

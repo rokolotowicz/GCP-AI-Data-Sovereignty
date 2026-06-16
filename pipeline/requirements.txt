@@ -1,0 +1,28 @@
+# NOTE: do NOT list apache-beam here. The Flex Template base image already
+# ships a matching apache-beam[gcp]; adding it risks a version mismatch with
+# the worker harness. Pin these before production for reproducible builds.
+
+# PII detection / redaction
+presidio-analyzer
+presidio-anonymizer
+spacy
+
+# File extraction + OCR
+PyMuPDF            # fitz: PDF text + rasterize
+pytesseract        # wraps the tesseract-ocr system binary (installed via apt)
+Pillow
+python-docx
+openpyxl
+
+# Embedding (local, in-VPC)
+sentence-transformers
+
+# Vector sink
+lancedb
+pyarrow
+
+# Envelope encryption
+tink[gcpkms]
+
+# GCS access
+google-cloud-storage

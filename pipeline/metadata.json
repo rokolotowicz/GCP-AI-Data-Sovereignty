@@ -1,0 +1,33 @@
+{
+  "name": "Sovereign-AI PII Streaming Scrubber",
+  "description": "Confidential streaming pipeline: OCR/extract -> Presidio redact -> embed -> field-level envelope encryption -> LanceDB.",
+  "parameters": [
+    {
+      "name": "input_subscription",
+      "label": "Pub/Sub subscription",
+      "helpText": "projects/PROJECT/subscriptions/sovereign-ai-ingest-dataflow",
+      "regexes": ["^projects/[^/]+/subscriptions/[^/]+$"]
+    },
+    {
+      "name": "lance_uri",
+      "label": "LanceDB dataset URI",
+      "helpText": "gs://<vectors-bucket>/lancedb/pii_store"
+    },
+    {
+      "name": "finance_key_id",
+      "label": "Finance KEK (KMS)",
+      "helpText": "KMS key resource id (or gcp-kms:// URI) used to wrap the finance DEK (SSN)."
+    },
+    {
+      "name": "marketing_key_id",
+      "label": "Marketing KEK (KMS)",
+      "helpText": "KMS key resource id (or gcp-kms:// URI) used to wrap the marketing DEK (address)."
+    },
+    {
+      "name": "cleaned_bucket",
+      "label": "Cleaned bucket (optional)",
+      "helpText": "Bucket for redacted text artifacts.",
+      "isOptional": true
+    }
+  ]
+}
