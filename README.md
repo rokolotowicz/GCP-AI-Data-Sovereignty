@@ -113,7 +113,7 @@ flowchart TD
 A single object upload produces a single encrypted row. Each stage runs inside the SEV-protected worker:
 
 1. **Notify** GCS emits an `OBJECT_FINALIZE` notification to the Pub/Sub topic; the streaming job reads it from the subscription.
-2. **Fetch & extract** — the worker pulls the object into RAM, runs OCR/parsing, and emits one record (`record_id = <object-name>::<uuid>`).
+2. **Fetch & extract** The worker pulls the object into RAM, runs OCR/parsing, and emits one record (`record_id = <object-name>::<uuid>`).
 3. **Redact** Presidio detects entities and produces redacted text (safe to embed) plus the extracted `{ssn, address, ...}`.
 4. **Embed** the redacted text is embedded locally (`all-MiniLM-L6-v2`, 384-dim) no managed API, no egress.
 5. **Envelope-encrypt** SSN is sealed under the finance DEK, address under the marketing DEK (see [Encryption Logic](#encryption-logic)).
