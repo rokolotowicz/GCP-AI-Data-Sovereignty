@@ -2,7 +2,7 @@
 
 # GCP AI Data Sovereignty
 
-**A confidential, in-VPC streaming pipeline that redacts PII, embeds text locally, and applies per-department field-level encryption — encrypted at rest, in use, and per field.**
+**A confidential, in-VPC streaming pipeline that redacts PII, embeds text locally, and applies per-department field-level encryption, encrypted at rest, in use, and per field.**
 
 ![Google Cloud](https://img.shields.io/badge/Cloud-Google%20Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)
 ![IaC](https://img.shields.io/badge/IaC-Terraform%20%2B%20Infra%20Manager-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
@@ -20,9 +20,9 @@
 
 ---
 
-This is a reference implementation demonstrating a "data never leaves the trust boundary" architecture on Google Cloud: encryption **at rest** (CMEK), **in use** (a Trusted Execution Environment on the ingestion path), and **per-field** with role-scoped access. Dropping a document into a bucket triggers a streaming pipeline that extracts text, redacts PII, embeds the redacted text with a local model, envelope-encrypts sensitive fields under per-department HSM keys, and writes everything to an object-store-native vector store — on Confidential VMs with no public IPs and no external egress. The entire estate is Terraform, deployed server-side via Infrastructure Manager.
+This is a reference implementation demonstrating a "data never leaves the trust boundary" architecture on Google Cloud: encryption **at rest** (CMEK), **in use** (a Trusted Execution Environment on the ingestion path), and **per-field** with role-scoped access. Dropping a document into a bucket triggers a streaming pipeline that extracts text, redacts PII, embeds the redacted text with a local model, envelope-encrypts sensitive fields under per-department HSM keys, and writes everything to an object-store-native vector store on Confidential VMs with no public IPs and no external egress. The entire estate is Terraform, deployed server-side via Infrastructure Manager.
 
-> **Status:** verified end-to-end — documents flow from raw bucket to encrypted rows in LanceDB, with SSN sealed under the finance key and address under the marketing key.
+> **Status:** verified end-to-end, documents flow from raw bucket to encrypted rows in LanceDB, with SSN sealed under the finance key and address under the marketing key.
 
 ---
 
@@ -41,11 +41,11 @@ This is a reference implementation demonstrating a "data never leaves the trust 
   - [1. Deployer / IAM bootstrap](#1-deployer--iam-bootstrap)
   - [2. CMEK service-agent grants](#2-cmek-service-agent-grants)
   - [3. Worker-pool & launcher capacity](#3-worker-pool--launcher-capacity)
-  - [4. Networking — Private Google Access](#4-networking--private-google-access)
+  - [4. Networking Private Google Access](#4-networking--private-google-access)
   - [5. Build process](#5-build-process)
   - [6. Launcher process](#6-launcher-process)
   - [7. Worker process](#7-worker-process)
-  - [8. Envelope encryption — worker denied useToDecrypt](#8-envelope-encryption--worker-denied-usetodecrypt)
+  - [8. Envelope encryption worker denied useToDecrypt](#8-envelope-encryption--worker-denied-usetodecrypt)
   - [9. Log analysis & diagnostic command reference](#9-log-analysis--diagnostic-command-reference)
 
 ---
@@ -62,7 +62,7 @@ Dropping a file into a raw bucket triggers a streaming pipeline that:
 4. **Envelope-encrypts** selected sensitive fields with per-department keys (SSN under a finance key, address under a marketing key) using Google Tink.
 5. **Writes** the vector, redacted text, and field ciphertexts to a vector store that lives directly on customer-managed-encrypted object storage.
 
-All compute runs on Confidential N2D workers (AMD SEV — memory encrypted in use), with no public IPs and all dependencies and models baked into the container image so the workers make zero calls to the public internet.
+All compute runs on Confidential N2D workers (AMD SEV memory encrypted in use), with no public IPs and all dependencies and models baked into the container image so the workers make zero calls to the public internet.
 
 ---
 
@@ -112,12 +112,12 @@ flowchart TD
 
 A single object upload produces a single encrypted row. Each stage runs inside the SEV-protected worker:
 
-1. **Notify** — GCS emits an `OBJECT_FINALIZE` notification to the Pub/Sub topic; the streaming job reads it from the subscription.
+1. **Notify** GCS emits an `OBJECT_FINALIZE` notification to the Pub/Sub topic; the streaming job reads it from the subscription.
 2. **Fetch & extract** — the worker pulls the object into RAM, runs OCR/parsing, and emits one record (`record_id = <object-name>::<uuid>`).
-3. **Redact** — Presidio detects entities and produces redacted text (safe to embed) plus the extracted `{ssn, address, ...}`.
-4. **Embed** — the redacted text is embedded locally (`all-MiniLM-L6-v2`, 384-dim) — no managed API, no egress.
-5. **Envelope-encrypt** — SSN is sealed under the finance DEK, address under the marketing DEK (see [Encryption Logic](#encryption-logic)).
-6. **Write** — the row is appended to LanceDB on the CMEK vectors bucket.
+3. **Redact** Presidio detects entities and produces redacted text (safe to embed) plus the extracted `{ssn, address, ...}`.
+4. **Embed** the redacted text is embedded locally (`all-MiniLM-L6-v2`, 384-dim) no managed API, no egress.
+5. **Envelope-encrypt** SSN is sealed under the finance DEK, address under the marketing DEK (see [Encryption Logic](#encryption-logic)).
+6. **Write** the row is appended to LanceDB on the CMEK vectors bucket.
 
 **Row schema written to LanceDB:**
 
@@ -149,8 +149,8 @@ The field-level layer is an **envelope-encryption** scheme designed around two c
 
 - A **Data Encryption Key (DEK)** is generated **locally** (AES-256-GCM via Tink), once per department per worker bundle.
 - The DEK is **wrapped once** by that department's HSM-backed Cloud KMS key (the **KEK**) with a single KMS `encrypt`. The wrapped blob is stored on every row.
-- Fields are encrypted **locally** with the in-memory DEK — **no KMS round-trip per field**. This reuse is what keeps the pipeline under the HSM quota (e.g., 1000 records × 2 fields = 2000 field encryptions but only **2** KMS calls).
-- Each ciphertext is bound to its `(record_id, field_name)` via AES-GCM **Additional Authenticated Data (AAD)**, so a ciphertext cannot be lifted from one record/field and replayed into another — decryption fails.
+- Fields are encrypted **locally** with the in-memory DEK, **no KMS round-trip per field**. This reuse is what keeps the pipeline under the HSM quota (e.g., 1000 records × 2 fields = 2000 field encryptions but only **2** KMS calls).
+- Each ciphertext is bound to its `(record_id, field_name)` via AES-GCM **Additional Authenticated Data (AAD)**, so a ciphertext cannot be lifted from one record/field and replayed into another, decryption fails.
 
 ### Write path (worker, inside the TEE)
 
@@ -160,11 +160,11 @@ sequenceDiagram
     participant K as Cloud KMS (HSM KEK)
     participant L as LanceDB (CMEK GCS)
 
-    Note over W: start_bundle — once per department
+    Note over W: start_bundle, once per department
     W->>W: generate local DEK (AES-256-GCM)
     W->>K: encrypt(DEK)   1 KMS call (cryptoKeyEncrypter)
     K-->>W: wrapped DEK blob
-    Note over W: process — many records, zero KMS
+    Note over W: process, many records, zero KMS
     loop each field
         W->>W: AES-GCM encrypt(field, AAD = record_id|field)
     end
